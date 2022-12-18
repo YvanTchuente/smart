@@ -61,14 +61,17 @@ class WebSocketServer
         array $services,
         array $origins = null
     ) {
-        if (!$address || !$port || !$hostname || !$services) {
-            throw new \InvalidArgumentException("Empty argument passed.");
-        }
         if (!preg_match('/(\d{1,3}(\b|\.)){4}/', $address)) {
-            throw new \InvalidArgumentException("Invalid IP address.");
+            throw new \InvalidArgumentException("[$address] is not a valid IP address.");
         }
-        if (!$port >= 1023 && !$port <= 65536) {
-            throw new \DomainException("Do not accept well-known ports.");
+        if ($port >= 1023 && $port <= 65536) {
+            throw new \DomainException("Well-known ports are not accepted.");
+        }
+        if (!$hostname) {
+            throw new \LengthException("Empty hostnames are not accepted.");
+        }
+        if (!$services) {
+            throw new \LengthException("The server's services were not provided.");
         }
 
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
