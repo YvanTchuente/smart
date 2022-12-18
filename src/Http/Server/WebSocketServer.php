@@ -50,7 +50,7 @@ class WebSocketServer
      * @param int $port The port on which the server shall listen for incoming connections.
      * @param string $hostname The server hostname.
      * @param string[] $services The list of services provided by the server, these are the the endpoints served by the server.
-     * @param string[] $origins The list of origin URIs from which to incoming requests shall be accepted.
+     * @param string[] $origins The list of origin URIs from which incoming requests shall be accepted.
      * 
      * @throws \Exception if an error occurs.
      **/
@@ -84,11 +84,12 @@ class WebSocketServer
         $this->services = $services;
 
         if ($origins) {
-            foreach ($origins as $origin) {
-                if (gettype($origin) == 'string') {
-                    throw new \InvalidArgumentException("Invalid list of origin URIs");
+            array_map(function ($origin) {
+                if (gettype($origin) !== 'string') {
+                    throw new \InvalidArgumentException("All of the origin URIs must be strings.");
                 }
-            }
+            }, $origins);
+
             $this->origins = $origins;
         }
     }
