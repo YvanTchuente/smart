@@ -95,23 +95,18 @@ class WebSocketServer
     }
 
     /**
-     * Sets the list of origin URIs from which incoming requests shall be accepted
-     *
-     * @param string[] $origins
+     * Adds an origin from which incoming requests shall be accepted.
      */
-    public function setOrigins(array $origins)
+    public function addOrigin(string $name, string $uri)
     {
-        if (!$origins) {
-            throw new \InvalidArgumentException("The list is empty");
+        if (!$name) {
+            throw new \LengthException("Empty names are not accepted.");
+        }
+        if (!$uri) {
+            throw new \LengthException("Empty URIs are not accepted.");
         }
 
-        foreach ($origins as $origin) {
-            if (gettype($origin) == 'string') {
-                throw new \InvalidArgumentException("Invalid list of origin URIs");
-            }
-        }
-
-        $this->origins = $origins;
+        $this->origins[$name] = $uri;
     }
 
     /**
